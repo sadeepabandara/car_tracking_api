@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 9000;
 
@@ -36,9 +37,9 @@ app.post("/create", async (req, res) => {
   }
 });
 
-// app.get("/", (req, res) => {
-//   res.sendFile(path.resolve(__dirname + "/views/index.html"));
-// });
+app.get("/", (req, res) => {
+  res.sendFile(path.resolve(__dirname + "/views/index.html"));
+});
 
 const db = admin.firestore();
 
