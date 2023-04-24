@@ -36,9 +36,9 @@ app.post("/create", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname + "./index.html"));
-});
+// app.get("/", (req, res) => {
+//   res.sendFile(path.resolve(__dirname + "/views/index.html"));
+// });
 
 const db = admin.firestore();
 
