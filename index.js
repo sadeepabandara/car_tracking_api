@@ -1,74 +1,47 @@
 const express = require("express");
-const PORT = process.env.PORT || 8090;
-let app = express();
-let fire = require("./fire");
-let cors = require("cors");
-let bodyParser = require("body-parser");
+const app = express();
+const PORT = process.env.PORT || 9000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+const admin = require("firebase-admin");
+const credentials = require("./key.json");
+const GeoPoint = require("geopoint");
+
+admin.initializeApp({
+  credential: admin.credential.cert(credentials),
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.post("/create", async (req, res) => {
+  try {
+    const id = req.body.id;
+    const geoPoint = new admin.firestore.GeoPoint(
+      req.body.location[0],
+      req.body.location[1]
+    );
+    const carJson = {
+      acceleration: req.body.acceleration,
+      humidity: req.body.humidity,
+      location: geoPoint,
+      pressure: req.body.pressure,
+      rotation: req.body.rotation,
+      temperature: req.body.temperature,
+      lastUpdate: new Date(),
+    };
+    const response = db.collection("cars").doc(id).set(carJson);
+    res.send(response);
+  } catch (err) {
+    res.send(err);
+  }
+});
 
 app.get("/", (req, res) => {
-  res.send(
-    "<h1>Firebase Cloud Firestore</h1><ul><li><p><b>GET /fetch</b></p></li><li><p><b>POST /add</b>  => {acceleration, humidity, location, pressure, rotation, temperature}</p></li></ul>"
-  );
+  res.sendFile(path.resolve(__dirname + "./index.html"));
 });
 
-app.get("/fetch", (req, res) => {
-  const db = fire.firestore();
-  db.settings({
-    timestampsInSnapshots: true,
-  });
-  let wholeData = [];
-  db.collection("cars")
-    .orderBy(
-      "acceleration",
-      "humidity",
-      "location",
-      "pressure",
-      "rotation",
-      "temperature"
-    )
-    .get()
-    .then((snapshot) => {
-      snapshot.forEach((car) => {
-        // console.log(doc.id, '=>', doc.data());
-        // console.log(doc.data().name + doc.data().age);
-        // console.log(doc.data());
-        wholeData.push(car.data());
-      });
-      console.log(wholeData);
-      res.send(wholeData);
-    })
-    .catch((error) => {
-      console.log("Error!", error);
-    });
-});
-
-app.post("/add", (req, res) => {
-  const db = fire.firestore();
-  db.settings({
-    timestampsInSnapshots: true,
-  });
-  db.collection("cars").add({
-    acceleration: req.body.acceleration,
-    humidity: req.body.humidity,
-    location: req.body.location,
-    pressure: req.body.pressure,
-    rotation: req.body.rotation,
-    temperature: req.body.temperature,
-  });
-  res.send({
-    acceleration: req.body.acceleration,
-    humidity: req.body.humidity,
-    location: req.body.location,
-    pressure: req.body.pressure,
-    rotation: req.body.rotation,
-    temperature: req.body.temperature,
-  });
-});
+const db = admin.firestore();
 
 app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
+  console.log(`Server is running on ${PORT}`);
 });
