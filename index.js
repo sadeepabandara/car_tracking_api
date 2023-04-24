@@ -19,7 +19,7 @@ app.post("/create", async (req, res) => {
   let humidity = req.body.humidity;
   let pressure = req.body.pressure;
   let rotation = req.body.rotation;
-  let temperature = req.body.humidity;
+  let temperature = req.body.temperature;
   try {
     const id = req.body.id;
     const geoPoint = new admin.firestore.GeoPoint(
