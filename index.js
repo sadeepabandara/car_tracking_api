@@ -17,9 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/create", async (req, res) => {
   let acceleration = req.body.acceleration;
   let humidity = req.body.humidity;
-  let location = req.body.humidity;
-  let pressure = req.body.humidity;
-  let rotation = req.body.humidity;
+  let pressure = req.body.pressure;
+  let rotation = req.body.rotation;
   let temperature = req.body.humidity;
   try {
     const id = req.body.id;
@@ -31,7 +30,7 @@ app.post("/create", async (req, res) => {
       acceleration: acceleration,
       humidity: humidity,
       location: geoPoint,
-      pressure: location,
+      pressure: pressure,
       rotation: rotation,
       temperature: temperature,
       lastUpdate: new Date(),
