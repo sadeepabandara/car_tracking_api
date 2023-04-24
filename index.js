@@ -15,6 +15,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post("/create", async (req, res) => {
+  let acceleration = req.body.acceleration;
+  let humidity = req.body.humidity;
+  let location = req.body.humidity;
+  let pressure = req.body.humidity;
+  let rotation = req.body.humidity;
+  let temperature = req.body.humidity;
   try {
     const id = req.body.id;
     const geoPoint = new admin.firestore.GeoPoint(
@@ -22,12 +28,12 @@ app.post("/create", async (req, res) => {
       req.body.location[1]
     );
     const carJson = {
-      acceleration: req.body.acceleration,
-      humidity: req.body.humidity,
+      acceleration: acceleration,
+      humidity: humidity,
       location: geoPoint,
-      pressure: req.body.pressure,
-      rotation: req.body.rotation,
-      temperature: req.body.temperature,
+      pressure: location,
+      rotation: rotation,
+      temperature: temperature,
       lastUpdate: new Date(),
     };
     const response = db.collection("cars").doc(id).set(carJson);
